@@ -1,0 +1,652 @@
+diff --git a/index.html b/index.html
+new file mode 100644
+index 0000000000000000000000000000000000000000..9dde0481c821c74749672b6fa0a717fe913bf086
+--- /dev/null
++++ b/index.html
+@@ -0,0 +1,646 @@
++<!doctype html>
++<html lang="fa" dir="rtl">
++<head>
++    <meta charset="UTF-8">
++    <title>سیستم انبارداری تحت وب</title>
++    <meta name="viewport" content="width=device-width, initial-scale=1">
++
++    <style>
++        :root {
++            --primary: #1976d2;
++            --primary-dark: #115293;
++            --primary-light: #e3f2fd;
++            --accent: #26c6da;
++            --danger: #e53935;
++            --bg: #f5f7fb;
++            --text: #222;
++            --muted: #777;
++            --radius: 14px;
++            --shadow-soft: 0 8px 20px rgba(0, 0, 0, 0.06);
++        }
++
++        * {
++            box-sizing: border-box;
++        }
++
++        body {
++            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
++            direction: rtl;
++            margin: 0;
++            padding: 0;
++            background: radial-gradient(circle at top, #e3f2fd 0, #f5f7fb 40%, #ffffff 100%);
++            color: var(--text);
++        }
++
++        .page-wrapper {
++            max-width: 1100px;
++            margin: 0 auto;
++            padding: 24px 16px 40px;
++        }
++
++        .card {
++            background: #fff;
++            border-radius: var(--radius);
++            box-shadow: var(--shadow-soft);
++            padding: 18px 20px;
++            margin-bottom: 18px;
++        }
++
++        .card-header {
++            display: flex;
++            align-items: center;
++            justify-content: space-between;
++            margin-bottom: 10px;
++            gap: 8px;
++        }
++
++        .badge {
++            display: inline-flex;
++            align-items: center;
++            justify-content: center;
++            padding: 3px 10px;
++            border-radius: 999px;
++            font-size: 12px;
++            background: var(--primary-light);
++            color: var(--primary-dark);
++        }
++
++        h1 {
++            margin: 0;
++            font-size: 26px;
++            color: var(--primary-dark);
++        }
++
++        .subtitle {
++            margin-top: 4px;
++            font-size: 13px;
++            color: var(--muted);
++        }
++
++        /* Top stats */
++        .stats-grid {
++            display: grid;
++            grid-template-columns: repeat(3, minmax(0, 1fr));
++            gap: 12px;
++            margin-top: 10px;
++        }
++
++        .stat-card {
++            background: linear-gradient(135deg, #1565c0, #42a5f5);
++            border-radius: 16px;
++            padding: 12px 14px;
++            color: #fff;
++            position: relative;
++            overflow: hidden;
++        }
++
++        .stat-card::after {
++            content: "";
++            position: absolute;
++            inset: 0;
++            background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.25), transparent 55%);
++            opacity: 0.6;
++            pointer-events: none;
++        }
++
++        .stat-label {
++            font-size: 12px;
++            opacity: 0.9;
++        }
++
++        .stat-value {
++            margin-top: 4px;
++            font-size: 20px;
++            font-weight: 600;
++        }
++
++        .stat-extra {
++            font-size: 11px;
++            opacity: 0.85;
++            margin-top: 3px;
++        }
++
++        /* Form */
++        form {
++            display: grid;
++            grid-template-columns: repeat(2, minmax(0, 1fr));
++            gap: 10px 16px;
++            margin-top: 6px;
++        }
++
++        .form-group {
++            display: flex;
++            flex-direction: column;
++            gap: 4px;
++        }
++
++        label {
++            font-size: 13px;
++            color: var(--muted);
++        }
++
++        input, textarea, select {
++            border-radius: 9px;
++            border: 1px solid #d0d7e2;
++            padding: 6px 9px;
++            font-size: 13px;
++            outline: none;
++            transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
++            background: #fdfdff;
++        }
++
++        input:focus,
++        textarea:focus,
++        select:focus {
++            border-color: var(--primary);
++            box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.18);
++            background: #ffffff;
++        }
++
++        textarea {
++            resize: vertical;
++            min-height: 60px;
++        }
++
++        .form-actions {
++            grid-column: 1 / -1;
++            display: flex;
++            justify-content: space-between;
++            align-items: center;
++            flex-wrap: wrap;
++            gap: 8px;
++            margin-top: 6px;
++        }
++
++        .btn {
++            border: none;
++            border-radius: 999px;
++            padding: 7px 16px;
++            font-size: 13px;
++            cursor: pointer;
++            display: inline-flex;
++            align-items: center;
++            gap: 6px;
++            transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.15s ease, opacity 0.15s ease;
++            white-space: nowrap;
++        }
++
++        .btn-primary {
++            background: linear-gradient(135deg, #1976d2, #42a5f5);
++            color: #fff;
++            box-shadow: 0 4px 10px rgba(25, 118, 210, 0.25);
++        }
++
++        .btn-primary:hover {
++            transform: translateY(-1px);
++            box-shadow: 0 6px 14px rgba(25, 118, 210, 0.35);
++        }
++
++        .btn-outline {
++            background: transparent;
++            color: var(--primary-dark);
++            border: 1px solid var(--primary);
++        }
++
++        .btn-outline:hover {
++            background: var(--primary-light);
++        }
++
++        .btn-danger {
++            background: var(--danger);
++            color: #fff;
++        }
++
++        .btn-danger:hover {
++            opacity: 0.93;
++        }
++
++        .btn-sm {
++            padding: 4px 10px;
++            font-size: 11px;
++        }
++
++        .hint {
++            font-size: 11px;
++            color: var(--muted);
++        }
++
++        /* Table + search */
++        .table-toolbar {
++            display: flex;
++            justify-content: space-between;
++            align-items: center;
++            gap: 10px;
++            margin-bottom: 10px;
++            flex-wrap: wrap;
++        }
++
++        .search-box {
++            position: relative;
++            max-width: 260px;
++            width: 100%;
++        }
++
++        .search-box input {
++            width: 100%;
++            padding-right: 26px;
++        }
++
++        .search-icon {
++            position: absolute;
++            right: 8px;
++            top: 50%;
++            transform: translateY(-50%);
++            font-size: 14px;
++            color: var(--muted);
++            pointer-events: none;
++        }
++
++        table {
++            width: 100%;
++            border-collapse: collapse;
++            font-size: 13px;
++            background: #fff;
++            border-radius: 12px;
++            overflow: hidden;
++        }
++
++        thead {
++            background: linear-gradient(90deg, #1976d2, #42a5f5);
++            color: #fff;
++        }
++
++        th, td {
++            padding: 7px 8px;
++            text-align: center;
++        }
++
++        tbody tr:nth-child(even) {
++            background: #f7f9ff;
++        }
++
++        tbody tr:hover {
++            background: #e3f2fd;
++        }
++
++        .empty-state {
++            text-align: center;
++            padding: 18px;
++            color: var(--muted);
++            font-size: 13px;
++        }
++
++        .tag {
++            display: inline-flex;
++            padding: 2px 8px;
++            border-radius: 999px;
++            font-size: 11px;
++            background: #e0f7fa;
++            color: #006064;
++        }
++
++        /* Responsive */
++        @media (max-width: 768px) {
++            .stats-grid {
++                grid-template-columns: 1fr;
++            }
++            form {
++                grid-template-columns: 1fr;
++            }
++            .form-actions {
++                flex-direction: column;
++                align-items: stretch;
++            }
++            .form-actions .btn {
++                width: 100%;
++                justify-content: center;
++            }
++            .table-toolbar {
++                flex-direction: column;
++                align-items: stretch;
++            }
++        }
++    </style>
++</head>
++<body>
++
++<div class="page-wrapper">
++    <!-- Header -->
++    <div class="card">
++        <div class="card-header">
++            <div>
++                <h1>سیستم انبارداری تحت وب</h1>
++                <p class="subtitle">
++                    ثبت، مدیریت و نمایش موجودی کالاها تنها در مرورگر، بدون نیاز به نصب نرم‌افزار
++                </p>
++            </div>
++            <span class="badge">نسخه نمایشی برای ارائه</span>
++        </div>
++
++        <!-- Stats -->
++        <div class="stats-grid">
++            <div class="stat-card">
++                <div class="stat-label">تعداد اقلام ثبت‌شده</div>
++                <div class="stat-value" id="stat-items">۰</div>
++                <div class="stat-extra">کل ردیف‌های انبار</div>
++            </div>
++            <div class="stat-card">
++                <div class="stat-label">مجموع موجودی</div>
++                <div class="stat-value" id="stat-quantity">۰</div>
++                <div class="stat-extra">جمع تعداد تمام کالاها</div>
++            </div>
++            <div class="stat-card">
++                <div class="stat-label">تعداد موقعیت‌ها</div>
++                <div class="stat-value" id="stat-locations">۰</div>
++                <div class="stat-extra">تعداد محل‌های نگهداری یکتا</div>
++            </div>
++        </div>
++    </div>
++
++    <!-- Form -->
++    <div class="card">
++        <div class="card-header">
++            <h2 style="margin:0; font-size:18px; color:var(--primary-dark);">افزودن کالای جدید به انبار</h2>
++        </div>
++
++        <form id="inventory-form">
++            <div class="form-group">
++                <label for="name">نام کالا *</label>
++                <input type="text" id="name" required placeholder="مثال: پیچ M8، کابل شبکه، مانیتور...">
++            </div>
++
++            <div class="form-group">
++                <label for="code">کد کالا / SKU *</label>
++                <input type="text" id="code" required placeholder="مثال: IT-001، WH-202، SKU-8899">
++            </div>
++
++            <div class="form-group">
++                <label for="quantity">تعداد *</label>
++                <input type="number" id="quantity" min="0" required placeholder="مثال: 10">
++            </div>
++
++            <div class="form-group">
++                <label for="location">محل نگهداری</label>
++                <input type="text" id="location" placeholder="مثال: قفسه A3، انبار پایین">
++            </div>
++
++            <div class="form-group">
++                <label for="category">دسته‌بندی</label>
++                <select id="category">
++                    <option value="">(انتخاب نشده)</option>
++                    <option value="مصرفی">مصرفی</option>
++                    <option value="تجهیزات">تجهیزات</option>
++                    <option value="لوازم یدکی">لوازم یدکی</option>
++                    <option value="سایر">سایر</option>
++                </select>
++            </div>
++
++            <div class="form-group">
++                <label for="description">توضیحات</label>
++                <textarea id="description" placeholder="توضیحات اضافی مثل وضعیت، برند، سریال و ..."></textarea>
++            </div>
++
++            <div class="form-actions">
++                <button type="submit" class="btn btn-primary">
++                    افزودن به انبار
++                </button>
++
++                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
++                    <button type="button" id="clear-all" class="btn btn-outline btn-sm">
++                        حذف همهٔ اطلاعات
++                    </button>
++                    <span class="hint">
++                        داده‌ها فقط در مرورگر این سیستم ذخیره می‌شوند (LocalStorage).
++                    </span>
++                </div>
++            </div>
++        </form>
++    </div>
++
++    <!-- Table -->
++    <div class="card">
++        <div class="card-header">
++            <h2 style="margin:0; font-size:18px; color:var(--primary-dark);">لیست کالاهای ثبت‌شده</h2>
++        </div>
++
++        <div class="table-toolbar">
++            <div class="search-box">
++                <input id="search-input" type="text" placeholder="جستجو بر اساس نام، کد یا محل...">
++                <span class="search-icon">🔍</span>
++            </div>
++            <span class="hint">با جستجو، جدول به‌صورت لحظه‌ای فیلتر می‌شود.</span>
++        </div>
++
++        <div class="table-container">
++            <table>
++                <thead>
++                <tr>
++                    <th>#</th>
++                    <th>نام کالا</th>
++                    <th>کد</th>
++                    <th>تعداد</th>
++                    <th>محل</th>
++                    <th>دسته</th>
++                    <th>توضیحات</th>
++                    <th>عملیات</th>
++                </tr>
++                </thead>
++                <tbody id="inventory-table-body">
++                <!-- پر می‌شود با جاوااسکریپت -->
++                </tbody>
++            </table>
++            <div id="empty-state" class="empty-state">
++                هنوز کالایی ثبت نشده است. از فرم بالا برای افزودن اولین ردیف استفاده کنید.
++            </div>
++        </div>
++    </div>
++</div>
++
++<script>
++    const STORAGE_KEY = 'inventoryData_v2';
++
++    const form = document.getElementById('inventory-form');
++    const tableBody = document.getElementById('inventory-table-body');
++    const clearBtn = document.getElementById('clear-all');
++    const searchInput = document.getElementById('search-input');
++    const emptyState = document.getElementById('empty-state');
++
++    const statItems = document.getElementById('stat-items');
++    const statQuantity = document.getElementById('stat-quantity');
++    const statLocations = document.getElementById('stat-locations');
++
++    function loadInventory() {
++        const data = localStorage.getItem(STORAGE_KEY);
++        return data ? JSON.parse(data) : [];
++    }
++
++    function saveInventory(items) {
++        localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
++    }
++
++    function formatNumber(num) {
++        return Number(num).toLocaleString('fa-IR');
++    }
++
++    function renderStats(items) {
++        const itemCount = items.length;
++        const totalQty = items.reduce((sum, item) => {
++            const q = parseFloat(item.quantity || 0);
++            return sum + (isNaN(q) ? 0 : q);
++        }, 0);
++
++        const locations = new Set(
++            items
++                .map(i => (i.location || '').trim())
++                .filter(Boolean)
++        );
++
++        statItems.textContent = formatNumber(itemCount);
++        statQuantity.textContent = formatNumber(totalQty);
++        statLocations.textContent = formatNumber(locations.size);
++    }
++
++    function renderTable(filterText = '') {
++        const items = loadInventory();
++        const normalizedFilter = filterText.trim().toLowerCase();
++        tableBody.innerHTML = '';
++
++        const filtered = items.filter(item => {
++            if (!normalizedFilter) return true;
++
++            const haystack = [
++                item.name,
++                item.code,
++                item.location,
++                item.category,
++                item.description
++            ]
++                .filter(Boolean)
++                .join(' ')
++                .toLowerCase();
++
++            return haystack.includes(normalizedFilter);
++        });
++
++        if (filtered.length === 0) {
++            emptyState.style.display = 'block';
++        } else {
++            emptyState.style.display = 'none';
++        }
++
++        filtered.forEach((item, index) => {
++            const tr = document.createElement('tr');
++
++            const tdIndex = document.createElement('td');
++            tdIndex.textContent = index + 1;
++
++            const tdName = document.createElement('td');
++            tdName.textContent = item.name;
++
++            const tdCode = document.createElement('td');
++            tdCode.textContent = item.code;
++
++            const tdQty = document.createElement('td');
++            tdQty.textContent = item.quantity;
++
++            const tdLocation = document.createElement('td');
++            tdLocation.textContent = item.location || '—';
++
++            const tdCategory = document.createElement('td');
++            if (item.category) {
++                const span = document.createElement('span');
++                span.className = 'tag';
++                span.textContent = item.category;
++                tdCategory.appendChild(span);
++            } else {
++                tdCategory.textContent = '—';
++            }
++
++            const tdDesc = document.createElement('td');
++            tdDesc.textContent = item.description || '—';
++
++            const tdActions = document.createElement('td');
++            const delBtn = document.createElement('button');
++            delBtn.className = 'btn btn-danger btn-sm';
++            delBtn.textContent = 'حذف';
++            delBtn.setAttribute('data-id', item.id);
++            tdActions.appendChild(delBtn);
++
++            tr.appendChild(tdIndex);
++            tr.appendChild(tdName);
++            tr.appendChild(tdCode);
++            tr.appendChild(tdQty);
++            tr.appendChild(tdLocation);
++            tr.appendChild(tdCategory);
++            tr.appendChild(tdDesc);
++            tr.appendChild(tdActions);
++
++            tableBody.appendChild(tr);
++        });
++
++        renderStats(items);
++    }
++
++    function generateId() {
++        return 'item_' + Date.now() + '_' + Math.random().toString(16).slice(2);
++    }
++
++    form.addEventListener('submit', function (e) {
++        e.preventDefault();
++
++        const name = document.getElementById('name').value.trim();
++        const code = document.getElementById('code').value.trim();
++        const quantity = document.getElementById('quantity').value;
++        const location = document.getElementById('location').value.trim();
++        const category = document.getElementById('category').value;
++        const description = document.getElementById('description').value.trim();
++
++        if (!name || !code) {
++            alert('نام کالا و کد کالا الزامی است.');
++            return;
++        }
++
++        const items = loadInventory();
++        items.push({
++            id: generateId(),
++            name,
++            code,
++            quantity: quantity || '0',
++            location,
++            category,
++            description
++        });
++
++        saveInventory(items);
++        renderTable(searchInput.value);
++        form.reset();
++        document.getElementById('name').focus();
++    });
++
++    clearBtn.addEventListener('click', function () {
++        if (confirm('همهٔ اطلاعات انبار برای این مرورگر حذف شود؟')) {
++            localStorage.removeItem(STORAGE_KEY);
++            renderTable(searchInput.value);
++        }
++    });
++
++    searchInput.addEventListener('input', function () {
++        renderTable(this.value);
++    });
++
++    tableBody.addEventListener('click', function (e) {
++        if (e.target.matches('button[data-id]')) {
++            const id = e.target.getAttribute('data-id');
++            let items = loadInventory();
++            items = items.filter(item => item.id !== id);
++            saveInventory(items);
++            renderTable(searchInput.value);
++        }
++    });
++
++    // initial
++    renderTable();
++</script>
++
++</body>
++</html>
