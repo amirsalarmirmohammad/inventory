@@ -13,7 +13,7 @@ index 0000000000000000000000000000000000000000..88847d8741c974b4f73effc3ed7c688e
 +    "start": "node server.js"
 +  },
 +  "dependencies": {
-+    "cors": "^2.8.5",
+    "cors": "^2.8.5",
 +    "express": "^4.19.2",
 +    "sqlite3": "^5.1.6"
 +  }
