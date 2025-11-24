@@ -1,3 +1,9 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>سیستم انبارداری تحت وب</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!doctype html>
 <html lang="fa" dir="rtl">
@@ -226,6 +232,7 @@
             color: var(--muted);
         }
 
+        /* Table + search */
         /* Table  search */
         .table-toolbar {
             display: flex;
@@ -487,6 +494,7 @@
         const itemCount = items.length;
         const totalQty = items.reduce((sum, item) => {
             const q = parseFloat(item.quantity || 0);
+            return sum + (isNaN(q) ? 0 : q);
             return sum  (isNaN(q) ? 0 : q);
         }, 0);
 
@@ -533,6 +541,7 @@
             const tr = document.createElement('tr');
 
             const tdIndex = document.createElement('td');
+            tdIndex.textContent = index + 1;
             tdIndex.textContent = index  1;
 
             const tdName = document.createElement('td');
@@ -583,6 +592,7 @@
     }
 
     function generateId() {
+        return 'item_' + Date.now() + '_' + Math.random().toString(16).slice(2);
         return 'item_'  Date.now()  '_'  Math.random().toString(16).slice(2);
     }
 
