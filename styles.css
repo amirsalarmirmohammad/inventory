@@ -292,6 +292,19 @@
             background: #e0f7fa;
             color: #006064;
         }
+        
+                th.sortable {
+            cursor: pointer;
+            position: relative;
+                }
+        
+        th.sortable::after {
+            content: "⇅";
+            font-size: 10px;
+            color: var(--muted);
+            margin-right: 4px;
+        }
+        
 
         /* Responsive */
         @media (max-width: 768px) {
