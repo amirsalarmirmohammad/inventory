@@ -1,118 +1,155 @@
 
+فقط یک `<div class="card">` باز شده، ولی سه‌تا `</div>` بسته شده. مرورگر این چیزها را دوست ندارد، DOM را قاطی می‌کند و نتیجه‌اش همین حس «کد بالای جدول اجرا نمی‌شود» می‌شود.
+
+بیایم فایل را مثل آدمیزاد مرتب کنیم.
+
+---
+
+## ✅ نسخه‌ی تمیز و درست `index.html`
+
+این را **کامل** جای `index.html` فعلی کپی کن (فقط مطمئن شو `app.js` و `styles.css` همین اسم را دارند):
+
+```html
 <!doctype html>
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <title>سیستم انبارداری تحت وب</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="styles.css">
-   
+ <meta charset="UTF-8">
+ <title>سیستم انبارداری تحت وب</title>
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<form id="inventory-form">
-    <div class="form-group">
-        <label for="name">نام کالا *</label>
-        <input type="text" id="name" required placeholder="مثال: پیچ M8، کابل شبکه، مانیتور...">
-    </div>
+<div class="page-wrapper">
+ <!-- کارت بالای صفحه: عنوان و توضیح -->
+ <div class="card">
+     <div class="card-header">
+         <div>
+             <h1>سیستم انبارداری تحت وب</h1>
+             <p class="subtitle">
+                 ثبت، مدیریت و نمایش موجودی کالاها تنها در مرورگر، بدون نیاز به نصب نرم‌افزار
+             </p>
+         </div>
+         <span class="badge">نسخه نمایشی برای ارائه</span>
+     </div>
+ </div>
 
-    <div class="form-group">
-        <label for="code">کد کالا / SKU *</label>
-        <input type="text" id="code" required placeholder="مثال: IT-001، WH-202، SKU-8899">
-    </div>
+ <!-- کارت فرم افزودن کالا -->
+ <div class="card">
+     <div class="card-header">
+         <h2 style="margin:0; font-size:18px; color:var(--primary-dark);">
+             افزودن کالای جدید به انبار
+         </h2>
+     </div>
 
-    <div class="form-group">
-        <label for="quantity">تعداد *</label>
-        <input type="number" id="quantity" min="0" required placeholder="مثال: 10">
-    </div>
+     <form id="inventory-form">
+         <div class="form-group">
+             <label for="name">نام کالا *</label>
+             <input type="text" id="name" required placeholder="مثال: پیچ M8، کابل شبکه، مانیتور...">
+         </div>
 
-    <div class="form-group">
-        <label for="price">قیمت واحد (ریال)</label>
-        <input type="number" id="price" min="0" placeholder="مثال: 150000">
-    </div>
+         <div class="form-group">
+             <label for="code">کد کالا / SKU *</label>
+             <input type="text" id="code" required placeholder="مثال: IT-001، WH-202، SKU-8899">
+         </div>
 
-    <div class="form-group">
-        <label for="location">محل نگهداری</label>
-        <input type="text" id="location" placeholder="مثال: قفسه A3، انبار پایین">
-    </div>
+         <div class="form-group">
+             <label for="quantity">تعداد *</label>
+             <input type="number" id="quantity" min="0" required placeholder="مثال: 10">
+         </div>
 
-    <div class="form-group">
-        <label for="category">دسته‌بندی</label>
-        <select id="category">
-            <option value="">(انتخاب نشده)</option>
-            <option value="مصرفی">مصرفی</option>
-            <option value="تجهیزات">تجهیزات</option>
-            <option value="لوازم یدکی">لوازم یدکی</option>
-            <option value="سایر">سایر</option>
-        </select>
-    </div>
-        <div style="overflow-x:auto;">
-            <table>...</table>
-        </div>
-    <div class="form-group">
-        <label for="description">توضیحات</label>
-        <textarea id="description" placeholder="توضیحات اضافی مثل وضعیت، برند، سریال و ..."></textarea>
-    </div>
+         <div class="form-group">
+             <label for="price">قیمت واحد (ریال)</label>
+             <input type="number" id="price" min="0" placeholder="مثال: 150000">
+         </div>
 
-    <div class="form-actions">
-        <button type="submit" class="btn btn-primary">
-            افزودن به انبار
-        </button>
+         <div class="form-group">
+             <label for="location">محل نگهداری</label>
+             <input type="text" id="location" placeholder="مثال: قفسه A3، انبار پایین">
+         </div>
 
-        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-            <button type="button" id="clear-all" class="btn btn-outline btn-sm">
-                حذف همهٔ اطلاعات
-            </button>
-            <span class="hint">
-                داده‌ها فقط در مرورگر این سیستم ذخیره می‌شوند (LocalStorage).
-            </span>
-        </div>
-    </div>
-</form>
+         <div class="form-group">
+             <label for="category">دسته‌بندی</label>
+             <select id="category">
+                 <option value="">(انتخاب نشده)</option>
+                 <option value="مصرفی">مصرفی</option>
+                 <option value="تجهیزات">تجهیزات</option>
+                 <option value="لوازم یدکی">لوازم یدکی</option>
+                 <option value="سایر">سایر</option>
+             </select>
+         </div>
 
+         <div class="form-group">
+             <label for="description">توضیحات</label>
+             <textarea id="description" placeholder="توضیحات اضافی مثل وضعیت، برند، سریال و ..."></textarea>
+         </div>
 
-    <!-- Table -->
-    <div class="card">
-        <div class="card-header">
-            <h2 style="margin:0; font-size:18px; color:var(--primary-dark);">لیست کالاهای ثبت‌شده</h2>
-        </div>
+         <div class="form-actions">
+             <button type="submit" class="btn btn-primary">
+                 افزودن به انبار
+             </button>
 
-        <div class="table-toolbar">
-            <div class="search-box">
-                <input id="search-input" type="text" placeholder="جستجو بر اساس نام، کد یا محل...">
-                <span class="search-icon">🔍</span>
-            </div>
-            <span class="hint">با جستجو، جدول به‌صورت لحظه‌ای فیلتر می‌شود.</span>
-        </div>
+             <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                 <button type="button" id="clear-all" class="btn btn-outline btn-sm">
+                     حذف همهٔ اطلاعات
+                 </button>
+                 <span class="hint">
+                     داده‌ها فقط در مرورگر این سیستم ذخیره می‌شوند (LocalStorage).
+                 </span>
+             </div>
+         </div>
+     </form>
+ </div>
 
-        <div class="table-container">
-            <table>
-                <thead>
-                <tr>
-                 <th>#</th>
-                    <th>نام کالا</th>
-                    <th>کد</th>
-                    <th>تعداد</th>
-                    <th>قیمت واحد</th>
-                    <th>ارزش کل</th>
-                    <th>محل</th>
-                    <th>دسته</th>
-                    <th>توضیحات</th>
-                    <th>عملیات</th>
-                </tr>
-                </thead>
-                <tbody id="inventory-table-body">
-                <!-- پر می‌شود با جاوااسکریپت -->
-                </tbody>
-            </table>
-            <div id="empty-state" class="empty-state">
-                هنوز کالایی ثبت نشده است. از فرم بالا برای افزودن اولین ردیف استفاده کنید.
-            </div>
-        </div>
-    </div>
+ <!-- کارت جدول کالاها -->
+ <div class="card">
+     <div class="card-header">
+         <h2 style="margin:0; font-size:18px; color:var(--primary-dark);">
+             لیست کالاهای ثبت‌شده
+         </h2>
+     </div>
+
+     <div class="table-toolbar">
+         <div class="search-box">
+             <input id="search-input" type="text" placeholder="جستجو بر اساس نام، کد یا محل...">
+             <span class="search-icon">🔍</span>
+         </div>
+         <span class="hint">با جستجو، جدول به‌صورت لحظه‌ای فیلتر می‌شود.</span>
+     </div>
+
+     <div class="table-container" style="overflow-x:auto;">
+         <table>
+             <thead>
+                 <tr>
+                     <th>#</th>
+                     <th>نام کالا</th>
+                     <th>کد</th>
+                     <th>تعداد</th>
+                     <th>قیمت واحد</th>
+                     <th>ارزش کل</th>
+                     <th>محل</th>
+                     <th>دسته</th>
+                     <th>توضیحات</th>
+                     <th>عملیات</th>
+                 </tr>
+             </thead>
+             <tbody id="inventory-table-body">
+                 <!-- پر می‌شود با جاوااسکریپت -->
+             </tbody>
+         </table>
+
+         <div id="empty-state" class="empty-state">
+             هنوز کالایی ثبت نشده است. از فرم بالا برای افزودن اولین ردیف استفاده کنید.
+         </div>
+
+         <div id="total-value"
+              class="hint"
+              style="margin-top:8px; text-align:left; font-weight:600; color:#115293;">
+         </div>
+     </div>
+ </div>
 </div>
 
 <script src="app.js"></script>
-
 </body>
 </html>
