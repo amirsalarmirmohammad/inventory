@@ -60,6 +60,103 @@ function calcTotalInventoryValue(items) {
         return sum + qty * price;
     }, 0);
 }
+function buildCategorySummary(items) {
+    const map = {};
+
+    items.forEach(item => {
+        const category = item.category || 'بدون دسته';
+        const qty = parseFloat(item.quantity || 0) || 0;
+        const price = parseFloat(item.price || 0) || 0;
+        const value = qty * price;
+
+        if (!map[category]) {
+            map[category] = {
+                category,
+                totalQty: 0,
+                totalValue: 0
+            };
+        }
+
+        map[category].totalQty += qty;
+        map[category].totalValue += value;
+    });
+
+    return Object.values(map);
+}
+
+function renderCategorySummary(items) {
+    const tbody = document.getElementById('category-summary-body');
+    const maxInfoDiv = document.getElementById('max-item-info');
+
+    if (!tbody) return;
+
+    tbody.innerHTML = '';
+
+    const summary = buildCategorySummary(items);
+
+    if (summary.length === 0) {
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.colSpan = 3;
+        td.textContent = 'داده‌ای برای نمایش دسته‌ها وجود ندارد.';
+        td.style.textAlign = 'center';
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+
+        if (maxInfoDiv) maxInfoDiv.textContent = '';
+        return;
+    }
+
+    summary.forEach(row => {
+        const tr = document.createElement('tr');
+
+        const tdCat = document.createElement('td');
+        tdCat.textContent = row.category;
+
+        const tdQty = document.createElement('td');
+        tdQty.textContent = formatNumber(row.totalQty);
+
+        const tdVal = document.createElement('td');
+        tdVal.textContent = formatNumber(row.totalValue);
+
+        tr.appendChild(tdCat);
+        tr.appendChild(tdQty);
+        tr.appendChild(tdVal);
+
+        tbody.appendChild(tr);
+    });
+
+    if (maxInfoDiv) {
+        const maxItem = items.reduce((best, item) => {
+            const qty = parseFloat(item.quantity || 0) || 0;
+            const price = parseFloat(item.price || 0) || 0;
+            const value = qty * price;
+
+            if (!best || value > best.value) {
+                return {
+                    name: item.name,
+                    code: item.code,
+                    value
+                };
+            }
+            return best;
+        }, null);
+
+        if (maxItem && maxItem.value > 0) {
+            maxInfoDiv.textContent =
+                'بیشترین ارزش: ' +
+                (maxItem.name || 'بدون نام') +
+                ' ' +
+                '(' + (maxItem.code || 'بدون کد') + ')' +
+                ' با ارزش ' +
+                formatNumber(maxItem.value) +
+                ' ریال';
+        } else {
+            maxInfoDiv.textContent = '';
+        }
+    }
+}
+
 
 function sortItems(items) {
     if (!sortConfig.field) return items;
@@ -233,6 +330,8 @@ function renderTable(filterText = '') {
         totalValueDiv.textContent =
             'ارزش کل انبار: ' + formatNumber(totalValue) + ' ریال';
     }
+    // گزارش دسته‌ها و بیشترین ارزش
+    renderCategorySummary(items);
 }
 
 function generateId() {
