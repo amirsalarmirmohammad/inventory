@@ -25,6 +25,56 @@
 
  <!-- کارت فرم افزودن کالا -->
  <div class="card">
+       <!-- کارت آمار کلی -->
+    <div class="card">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">تعداد اقلام</div>
+                <div class="stat-value" id="stat-items">۰</div>
+                <div class="stat-extra">تعداد ردیف‌های ثبت‌شده</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">مجموع تعداد</div>
+                <div class="stat-value" id="stat-quantity">۰</div>
+                <div class="stat-extra">جمع تعداد تمام کالاها</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">تعداد محل‌ها</div>
+                <div class="stat-value" id="stat-locations">۰</div>
+                <div class="stat-extra">محل‌های یکتای نگهداری</div>
+            </div>
+        </div>
+    </div>
+     <!-- کارت گزارش دسته‌ها -->
+    <div class="card">
+        <div class="card-header">
+            <h2 style="margin:0; font-size:18px; color:var(--primary-dark);">
+                گزارش دسته‌ها و بیشترین ارزش
+            </h2>
+        </div>
+
+        <div class="table-container" style="overflow-x:auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>دسته</th>
+                        <th>مجموع تعداد</th>
+                        <th>مجموع ارزش (ریال)</th>
+                    </tr>
+                </thead>
+                <tbody id="category-summary-body">
+                    <!-- با جاوااسکریپت پر می‌شود -->
+                </tbody>
+            </table>
+        </div>
+
+        <div id="max-item-info"
+             class="hint"
+             style="margin-top:8px; font-weight:600;">
+            <!-- اطلاعات کالای با بیشترین ارزش اینجا می‌آید -->
+        </div>
+    </div>
+
      <div class="card-header">
          <h2 style="margin:0; font-size:18px; color:var(--primary-dark);">
              افزودن کالای جدید به انبار
