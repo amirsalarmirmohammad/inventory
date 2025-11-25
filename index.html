@@ -10,98 +10,64 @@
 </head>
 <body>
 
-<div class="page-wrapper">
-    <!-- Header -->
-    <div class="card">
-        <div class="card-header">
-            <div>
-                <h1>سیستم انبارداری تحت وب</h1>
-                <p class="subtitle">
-                    ثبت، مدیریت و نمایش موجودی کالاها تنها در مرورگر، بدون نیاز به نصب نرم‌افزار
-                </p>
-            </div>
-            <span class="badge">نسخه نمایشی برای ارائه</span>
-        </div>
-
-        <!-- Stats -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-label">تعداد اقلام ثبت‌شده</div>
-                <div class="stat-value" id="stat-items">۰</div>
-                <div class="stat-extra">کل ردیف‌های انبار</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">مجموع موجودی</div>
-                <div class="stat-value" id="stat-quantity">۰</div>
-                <div class="stat-extra">جمع تعداد تمام کالاها</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">تعداد موقعیت‌ها</div>
-                <div class="stat-value" id="stat-locations">۰</div>
-                <div class="stat-extra">تعداد محل‌های نگهداری یکتا</div>
-            </div>
-        </div>
+<form id="inventory-form">
+    <div class="form-group">
+        <label for="name">نام کالا *</label>
+        <input type="text" id="name" required placeholder="مثال: پیچ M8، کابل شبکه، مانیتور...">
     </div>
 
-    <!-- Form -->
-    <div class="card">
-        <div class="card-header">
-            <h2 style="margin:0; font-size:18px; color:var(--primary-dark);">افزودن کالای جدید به انبار</h2>
-        </div>
-
-        <form id="inventory-form">
-            <div class="form-group">
-                <label for="name">نام کالا *</label>
-                <input type="text" id="name" required placeholder="مثال: پیچ M8، کابل شبکه، مانیتور...">
-            </div>
-
-            <div class="form-group">
-                <label for="code">کد کالا / SKU *</label>
-                <input type="text" id="code" required placeholder="مثال: IT-001، WH-202، SKU-8899">
-            </div>
-
-            <div class="form-group">
-                <label for="quantity">تعداد *</label>
-                <input type="number" id="quantity" min="0" required placeholder="مثال: 10">
-            </div>
-
-            <div class="form-group">
-                <label for="location">محل نگهداری</label>
-                <input type="text" id="location" placeholder="مثال: قفسه A3، انبار پایین">
-            </div>
-
-            <div class="form-group">
-                <label for="category">دسته‌بندی</label>
-                <select id="category">
-                    <option value="">(انتخاب نشده)</option>
-                    <option value="مصرفی">مصرفی</option>
-                    <option value="تجهیزات">تجهیزات</option>
-                    <option value="لوازم یدکی">لوازم یدکی</option>
-                    <option value="سایر">سایر</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="description">توضیحات</label>
-                <textarea id="description" placeholder="توضیحات اضافی مثل وضعیت، برند، سریال و ..."></textarea>
-            </div>
-
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary">
-                    افزودن به انبار
-                </button>
-
-                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                    <button type="button" id="clear-all" class="btn btn-outline btn-sm">
-                        حذف همهٔ اطلاعات
-                    </button>
-                    <span class="hint">
-                        داده‌ها فقط در مرورگر این سیستم ذخیره می‌شوند (LocalStorage).
-                    </span>
-                </div>
-            </div>
-        </form>
+    <div class="form-group">
+        <label for="code">کد کالا / SKU *</label>
+        <input type="text" id="code" required placeholder="مثال: IT-001، WH-202، SKU-8899">
     </div>
+
+    <div class="form-group">
+        <label for="quantity">تعداد *</label>
+        <input type="number" id="quantity" min="0" required placeholder="مثال: 10">
+    </div>
+
+    <div class="form-group">
+        <label for="price">قیمت واحد (ریال)</label>
+        <input type="number" id="price" min="0" placeholder="مثال: 150000">
+    </div>
+
+    <div class="form-group">
+        <label for="location">محل نگهداری</label>
+        <input type="text" id="location" placeholder="مثال: قفسه A3، انبار پایین">
+    </div>
+
+    <div class="form-group">
+        <label for="category">دسته‌بندی</label>
+        <select id="category">
+            <option value="">(انتخاب نشده)</option>
+            <option value="مصرفی">مصرفی</option>
+            <option value="تجهیزات">تجهیزات</option>
+            <option value="لوازم یدکی">لوازم یدکی</option>
+            <option value="سایر">سایر</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="description">توضیحات</label>
+        <textarea id="description" placeholder="توضیحات اضافی مثل وضعیت، برند، سریال و ..."></textarea>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">
+            افزودن به انبار
+        </button>
+
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+            <button type="button" id="clear-all" class="btn btn-outline btn-sm">
+                حذف همهٔ اطلاعات
+            </button>
+            <span class="hint">
+                داده‌ها فقط در مرورگر این سیستم ذخیره می‌شوند (LocalStorage).
+            </span>
+        </div>
+    </div>
+</form>
+
 
     <!-- Table -->
     <div class="card">
@@ -121,10 +87,12 @@
             <table>
                 <thead>
                 <tr>
-                    <th>#</th>
+                 <th>#</th>
                     <th>نام کالا</th>
                     <th>کد</th>
                     <th>تعداد</th>
+                    <th>قیمت واحد</th>
+                    <th>ارزش کل</th>
                     <th>محل</th>
                     <th>دسته</th>
                     <th>توضیحات</th>
