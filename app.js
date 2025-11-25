@@ -11,8 +11,14 @@ const statQuantity = document.getElementById('stat-quantity');
 const statLocations = document.getElementById('stat-locations');
 const totalValueDiv = document.getElementById('total-value');
 
-// اگر null باشد یعنی در حالت "افزودن" هستیم، نه "ویرایش"
+// حالت ویرایش
 let currentEditId = null;
+
+// تنظیمات مرتب‌سازی
+let sortConfig = {
+    field: null,      // مثل "name" یا "price"
+    direction: 'asc', // "asc" یا "desc"
+};
 
 function loadInventory() {
     const data = localStorage.getItem(STORAGE_KEY);
@@ -55,6 +61,69 @@ function calcTotalInventoryValue(items) {
     }, 0);
 }
 
+function sortItems(items) {
+    if (!sortConfig.field) return items;
+
+    const sorted = [...items];
+    const field = sortConfig.field;
+    const dir = sortConfig.direction === 'asc' ? 1 : -1;
+
+    sorted.sort((a, b) => {
+        let aVal, bVal;
+
+        switch (field) {
+            case 'name':
+                aVal = (a.name || '').toLowerCase();
+                bVal = (b.name || '').toLowerCase();
+                break;
+            case 'code':
+                aVal = (a.code || '').toLowerCase();
+                bVal = (b.code || '').toLowerCase();
+                break;
+            case 'location':
+                aVal = (a.location || '').toLowerCase();
+                bVal = (b.location || '').toLowerCase();
+                break;
+            case 'category':
+                aVal = (a.category || '').toLowerCase();
+                bVal = (b.category || '').toLowerCase();
+                break;
+            case 'quantity':
+                aVal = parseFloat(a.quantity || 0) || 0;
+                bVal = parseFloat(b.quantity || 0) || 0;
+                break;
+            case 'price':
+                aVal = parseFloat(a.price || 0) || 0;
+                bVal = parseFloat(b.price || 0) || 0;
+                break;
+            case 'value': {
+                const aq = parseFloat(a.quantity || 0) || 0;
+                const ap = parseFloat(a.price || 0) || 0;
+                const bq = parseFloat(b.quantity || 0) || 0;
+                const bp = parseFloat(b.price || 0) || 0;
+                aVal = aq * ap;
+                bVal = bq * bp;
+                break;
+            }
+            default:
+                return 0;
+        }
+
+        let cmp;
+        if (typeof aVal === 'string' && typeof bVal === 'string') {
+            cmp = aVal.localeCompare(bVal, 'fa', {
+                numeric: true,
+                sensitivity: 'base',
+            });
+        } else {
+            cmp = aVal - bVal;
+        }
+        return cmp * dir;
+    });
+
+    return sorted;
+}
+
 function renderTable(filterText = '') {
     const items = loadInventory();
     const normalizedFilter = filterText.trim().toLowerCase();
@@ -83,7 +152,9 @@ function renderTable(filterText = '') {
         emptyState.style.display = 'none';
     }
 
-    filtered.forEach((item, index) => {
+    const dataToRender = sortItems(filtered);
+
+    dataToRender.forEach((item, index) => {
         const tr = document.createElement('tr');
 
         const tdIndex = document.createElement('td');
@@ -128,13 +199,11 @@ function renderTable(filterText = '') {
 
         const tdActions = document.createElement('td');
 
-        // دکمه ویرایش
         const editBtn = document.createElement('button');
         editBtn.className = 'btn btn-outline btn-sm btn-edit';
         editBtn.textContent = 'ویرایش';
         editBtn.setAttribute('data-id', item.id);
 
-        // دکمه حذف
         const delBtn = document.createElement('button');
         delBtn.className = 'btn btn-danger btn-sm btn-delete';
         delBtn.textContent = 'حذف';
@@ -200,6 +269,26 @@ function setFormModeEdit(isEdit) {
     }
 }
 
+function initSortHeaders() {
+    const headers = document.querySelectorAll('th[data-sort]');
+    headers.forEach(th => {
+        th.addEventListener('click', () => {
+            const field = th.getAttribute('data-sort');
+            if (!field) return;
+
+            if (sortConfig.field === field) {
+                sortConfig.direction =
+                    sortConfig.direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortConfig.field = field;
+                sortConfig.direction = 'asc';
+            }
+
+            renderTable(searchInput ? searchInput.value : '');
+        });
+    });
+}
+
 form.addEventListener('submit', function (e) {
     e.preventDefault();
 
@@ -219,7 +308,6 @@ form.addEventListener('submit', function (e) {
     const items = loadInventory();
 
     if (currentEditId) {
-        // حالت ویرایش: آیتم موجود را پیدا و آپدیت کن
         const index = items.findIndex(i => i.id === currentEditId);
         if (index !== -1) {
             items[index] = {
@@ -236,7 +324,6 @@ form.addEventListener('submit', function (e) {
         currentEditId = null;
         setFormModeEdit(false);
     } else {
-        // حالت افزودن: آیتم جدید اضافه کن
         items.push({
             id: generateId(),
             name,
@@ -295,5 +382,6 @@ tableBody.addEventListener('click', function (e) {
     }
 });
 
-// initial render
+// init
+initSortHeaders();
 renderTable();
