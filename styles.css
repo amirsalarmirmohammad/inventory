@@ -266,6 +266,7 @@
         th, td {
             padding: 7px 8px;
             text-align: center;
+            white-space: nowrap;    
         }
 
         tbody tr:nth-child(even) {
