@@ -479,6 +479,91 @@ tableBody.addEventListener('click', function (e) {
         saveInventory(items);
         renderTable(searchInput ? searchInput.value : '');
     }
+
+    function exportCSV(items) {
+    if (!items.length) {
+        alert("هیچ داده‌ای برای خروجی وجود ندارد");
+        return;
+    }
+
+    const header = [
+        "name", "code", "quantity", "price",
+        "location", "category", "description"
+    ];
+
+    const rows = items.map(item =>
+        header.map(h => `"${(item[h] || "").toString().replace(/"/g, '""')}"`).join(",")
+    );
+
+    const csv = header.join(",") + "\n" + rows.join("\n");
+
+    const blob = new Blob([csv], {type: "text/csv;charset=utf-8;"});
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "inventory.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+}
+    function exportJSON(items) {
+    if (!items.length) {
+        alert("هیچ داده‌ای برای خروجی وجود ندارد");
+        return;
+    }
+
+    const json = JSON.stringify(items, null, 2);
+
+    const blob = new Blob([json], {type: "application/json"});
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "inventory.json";
+    a.click();
+    URL.revokeObjectURL(url);
+}
+function importJSON(file) {
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+        try {
+            const data = JSON.parse(e.target.result);
+            if (!Array.isArray(data)) {
+                alert("فرمت فایل معتبر نیست");
+                return;
+            }
+
+            saveInventory(data);
+            renderTable();
+            alert("داده‌ها با موفقیت وارد شدند");
+        } catch {
+            alert("فایل JSON معتبر نیست");
+        }
+    };
+
+    reader.readAsText(file);
+}
+document.getElementById("export-csv").addEventListener("click", () => {
+    exportCSV(loadInventory());
+});
+
+document.getElementById("export-json").addEventListener("click", () => {
+    exportJSON(loadInventory());
+});
+
+document.getElementById("import-json").addEventListener("click", () => {
+    document.getElementById("import-file").click();
+});
+
+document.getElementById("import-file").addEventListener("change", function() {
+    if (this.files.length) {
+        importJSON(this.files[0]);
+        this.value = "";
+    }
+});
+
+
 });
 
 // init
