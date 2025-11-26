@@ -364,3 +364,70 @@
                 align-items: stretch;
             }
         }
+
+        /* --- بهینه‌سازی مخصوص موبایل / صفحه‌های کوچک --- */
+
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;
+    }
+
+    .page-wrapper {
+        padding: 12px 8px 24px;
+    }
+
+    .card {
+        padding: 12px 10px;
+        margin-bottom: 10px;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+
+    .card-header h2 {
+        font-size: 16px;
+    }
+
+    table {
+        font-size: 11px;
+    }
+
+    th, td {
+        padding: 4px 6px;
+    }
+
+    .table-container {
+        overflow-x: auto;
+    }
+}
+
+/* موبایل خیلی کوچک (مثلاً گوشی‌های قدیمی / عرض زیر 480px) */
+@media (max-width: 480px) {
+    /* ستون توضیحات را مخفی کن تا جدول شلوغ نشود */
+    table thead th:nth-child(9),
+    table tbody td:nth-child(9) {
+        display: none;
+    }
+
+    /* دکمه‌های عملیات زیر هم و فول‌ویث شوند */
+    td:last-child .btn {
+        display: block;
+        width: 100%;
+        margin-bottom: 4px;
+        justify-content: center;
+    }
+
+    td:last-child .btn:last-child {
+        margin-bottom: 0;
+    }
+
+    .stats-grid {
+        gap: 6px;
+    }
+
+    .stat-card {
+        padding: 8px 10px;
+    }
+}
+
