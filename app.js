@@ -60,6 +60,8 @@ function calcTotalInventoryValue(items) {
         return sum + qty * price;
     }, 0);
 }
+
+// خلاصهٔ دسته‌ها
 function buildCategorySummary(items) {
     const map = {};
 
@@ -156,7 +158,6 @@ function renderCategorySummary(items) {
         }
     }
 }
-
 
 function sortItems(items) {
     if (!sortConfig.field) return items;
@@ -330,7 +331,7 @@ function renderTable(filterText = '') {
         totalValueDiv.textContent =
             'ارزش کل انبار: ' + formatNumber(totalValue) + ' ریال';
     }
-    // گزارش دسته‌ها و بیشترین ارزش
+
     renderCategorySummary(items);
 }
 
@@ -368,7 +369,6 @@ function setFormModeEdit(isEdit) {
     }
 }
 
-
 function initSortHeaders() {
     const headers = document.querySelectorAll('th[data-sort]');
     headers.forEach(th => {
@@ -388,6 +388,79 @@ function initSortHeaders() {
         });
     });
 }
+
+// ===== Export / Import =====
+
+function exportCSV(items) {
+    if (!items.length) {
+        alert("هیچ داده‌ای برای خروجی وجود ندارد");
+        return;
+    }
+
+    const header = [
+        "name", "code", "quantity", "price",
+        "location", "category", "description"
+    ];
+
+    const rows = items.map(item =>
+        header
+            .map(h => `"${(item[h] || "").toString().replace(/"/g, '""')}"`)
+            .join(",")
+    );
+
+    const csv = header.join(",") + "\n" + rows.join("\n");
+
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "inventory.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+function exportJSON(items) {
+    if (!items.length) {
+        alert("هیچ داده‌ای برای خروجی وجود ندارد");
+        return;
+    }
+
+    const json = JSON.stringify(items, null, 2);
+
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "inventory.json";
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+function importJSON(file) {
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+        try {
+            const data = JSON.parse(e.target.result);
+            if (!Array.isArray(data)) {
+                alert("فرمت فایل معتبر نیست");
+                return;
+            }
+
+            saveInventory(data);
+            renderTable();
+            alert("داده‌ها با موفقیت وارد شدند");
+        } catch {
+            alert("فایل JSON معتبر نیست");
+        }
+    };
+
+    reader.readAsText(file);
+}
+
+// ===== Event Listeners =====
 
 form.addEventListener('submit', function (e) {
     e.preventDefault();
@@ -480,13 +553,38 @@ tableBody.addEventListener('click', function (e) {
         saveInventory(items);
         renderTable(searchInput ? searchInput.value : '');
     }
-
-
-
 });
 
+// دکمه‌های Export / Import
+const exportCsvBtn = document.getElementById('export-csv');
+const exportJsonBtn = document.getElementById('export-json');
+const importBtn = document.getElementById('import-json');
+const importFileInput = document.getElementById('import-file');
 
-});
+if (exportCsvBtn) {
+    exportCsvBtn.addEventListener('click', () => {
+        exportCSV(loadInventory());
+    });
+}
+
+if (exportJsonBtn) {
+    exportJsonBtn.addEventListener('click', () => {
+        exportJSON(loadInventory());
+    });
+}
+
+if (importBtn && importFileInput) {
+    importBtn.addEventListener('click', () => {
+        importFileInput.click();
+    });
+
+    importFileInput.addEventListener('change', function () {
+        if (this.files.length) {
+            importJSON(this.files[0]);
+            this.value = '';
+        }
+    });
+}
 
 // init
 initSortHeaders();
