@@ -465,6 +465,15 @@ function importJSON(file) {
     reader.readAsText(file);
 }
 
+const printBtn = document.getElementById('print-report');
+
+if (printBtn) {
+    printBtn.addEventListener('click', () => {
+        window.print();
+    });
+}
+
+
 // ===== Event Listeners =====
 
 form.addEventListener('submit', function (e) {
