@@ -408,9 +408,10 @@ function exportCSV(items) {
             .join(",")
     );
 
-    const csv = header.join(",") + "\n" + rows.join("\n");
-    const csvWithBom = "\uFEFF" + csvbody;
-    
+    const csvBody = header.join(",") + "\n" + rows.join("\n");
+
+    // BOM برای اکسل
+    const csvWithBom = "\uFEFF" + csvBody;
 
     const blob = new Blob([csvWithBom], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
@@ -419,8 +420,10 @@ function exportCSV(items) {
     a.href = url;
     a.download = "inventory.csv";
     a.click();
+
     URL.revokeObjectURL(url);
 }
+
 
 function exportJSON(items) {
     if (!items.length) {
