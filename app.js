@@ -409,8 +409,10 @@ function exportCSV(items) {
     );
 
     const csv = header.join(",") + "\n" + rows.join("\n");
+    const csvWithBom = "\uFEFF" + csvbody;
+    
 
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const blob = new Blob([csvWithBom], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
 
     const a = document.createElement("a");
