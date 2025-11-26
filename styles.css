@@ -306,6 +306,43 @@
         }
         
 
+                 @media print {
+                    /* حذف دکمه‌ها، فرم‌ها و چیزهای تعاملی */
+                    .btn,
+                    .table-toolbar,
+                    #clear-all,
+                    #search-input,
+                    .badge {
+                        display: none !important;
+                    }
+                
+                    body {
+                        background: #ffffff !important;
+                    }
+                
+                    .page-wrapper {
+                        max-width: 100%;
+                        padding: 0;
+                    }
+                
+                    .card {
+                        box-shadow: none;
+                        border-radius: 0;
+                        margin-bottom: 8px;
+                    }
+                
+                    table {
+                        font-size: 11px;
+                    }
+                
+                    th, td {
+                        padding: 4px 6px;
+                    }
+                }
+
+                                  
+
+
         /* Responsive */
         @media (max-width: 768px) {
             .stats-grid {
