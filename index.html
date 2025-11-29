@@ -1,220 +1,12 @@
-
 <!doctype html>
 <html lang="fa" dir="rtl">
-<head>
- <meta charset="UTF-8">
- <title>سیستم انبارداری تحت وب</title>
- <meta name="viewport" content="width=device-width, initial-scale=1">
- <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-
-<div class="page-wrapper">
- <!-- کارت بالای صفحه: عنوان و توضیح -->
- <div class="card">
-     <div class="card-header">
-         <div>
-             <h1>سیستم انبارداری تحت وب</h1>
-             <p class="subtitle">
-                 ثبت، مدیریت و نمایش موجودی کالاها تنها در مرورگر، بدون نیاز به نصب نرم‌افزار
-             </p>
-         </div>
-         <span class="badge">نسخه نمایشی برای ارائه</span>
-     </div>
- </div>
-
- <!-- کارت فرم افزودن کالا -->
- <div class="card">
-       <!-- کارت آمار کلی -->
-    <div class="card">
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-label">تعداد اقلام</div>
-                <div class="stat-value" id="stat-items">۰</div>
-                <div class="stat-extra">تعداد ردیف‌های ثبت‌شده</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">مجموع تعداد</div>
-                <div class="stat-value" id="stat-quantity">۰</div>
-                <div class="stat-extra">جمع تعداد تمام کالاها</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">تعداد محل‌ها</div>
-                <div class="stat-value" id="stat-locations">۰</div>
-                <div class="stat-extra">محل‌های یکتای نگهداری</div>
-            </div>
-        </div>
-    </div>
-     <!-- کارت گزارش دسته‌ها -->
-    <div class="card">
-        <div class="card-header">
-            <h2 style="margin:0; font-size:18px; color:var(--primary-dark);">
-                گزارش دسته‌ها و بیشترین ارزش
-            </h2>
-        </div>
-
-        <div class="table-container" style="overflow-x:auto;">
-            <table>
-                <thead>
-                    <tr>
-                        <th>دسته</th>
-                        <th>مجموع تعداد</th>
-                        <th>مجموع ارزش (ریال)</th>
-                    </tr>
-                </thead>
-                <tbody id="category-summary-body">
-                    <!-- با جاوااسکریپت پر می‌شود -->
-                </tbody>
-            </table>
-        </div>
-
-        <div id="max-item-info"
-             class="hint"
-             style="margin-top:8px; font-weight:600;">
-            <!-- اطلاعات کالای با بیشترین ارزش اینجا می‌آید -->
-        </div>
-    </div>
-
-     <div class="card-header">
-         <h2 style="margin:0; font-size:18px; color:var(--primary-dark);">
-             افزودن کالای جدید به انبار
-         </h2>
-     </div>
-
-     <form id="inventory-form">
-         <div class="form-group">
-             <label for="name">نام کالا *</label>
-             <input type="text" id="name" required placeholder="مثال: پیچ M8، کابل شبکه، مانیتور...">
-         </div>
-
-         <div class="form-group">
-             <label for="code">کد کالا / SKU *</label>
-             <input type="text" id="code" required placeholder="مثال: IT-001، WH-202، SKU-8899">
-         </div>
-
-         <div class="form-group">
-             <label for="quantity">تعداد *</label>
-             <input type="number" id="quantity" min="0" required placeholder="مثال: 10">
-         </div>
-
-         <div class="form-group">
-             <label for="price">قیمت واحد (ریال)</label>
-             <input type="number" id="price" min="0" placeholder="مثال: 150000">
-         </div>
-
-         <div class="form-group">
-             <label for="location">محل نگهداری</label>
-             <input type="text" id="location" placeholder="مثال: قفسه A3، انبار پایین">
-         </div>
-
-         <div class="form-group">
-             <label for="category">دسته‌بندی</label>
-             <select id="category">
-                 <option value="">(انتخاب نشده)</option>
-                 <option value="مصرفی">مصرفی</option>
-                 <option value="تجهیزات">تجهیزات</option>
-                 <option value="لوازم یدکی">لوازم یدکی</option>
-                 <option value="سایر">سایر</option>
-             </select>
-         </div>
-
-         <div class="form-group">
-             <label for="description">توضیحات</label>
-             <textarea id="description" placeholder="توضیحات اضافی مثل وضعیت، برند، سریال و ..."></textarea>
-         </div>
-
-         <div class="form-actions">
-             <button type="submit" class="btn btn-primary">
-                 افزودن به انبار
-             </button>
-
-             <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                 <button type="button" id="clear-all" class="btn btn-outline btn-sm">
-                     حذف همهٔ اطلاعات
-                 </button>
-                 <span class="hint">
-                     داده‌ها فقط در مرورگر این سیستم ذخیره می‌شوند (LocalStorage).
-                 </span>
-             </div>
-         </div>
-     </form>
- </div>
-
- <!-- کارت جدول کالاها -->
- <div class="card">
-     <div class="card-header">
-         <h2 style="margin:0; font-size:18px; color:var(--primary-dark);">
-             لیست کالاهای ثبت‌شده
-         </h2>
-     </div>
-
-     <div class="table-toolbar">
-         <div class="search-box">
-             <input id="search-input" type="text" placeholder="جستجو بر اساس نام، کد یا محل...">
-             <span class="search-icon">🔍</span>
-         </div>
-         <span class="hint">با جستجو، جدول به‌صورت لحظه‌ای فیلتر می‌شود.</span>
-     </div>
-
-     <div class="table-container" style="overflow-x:auto;">
-         <table>
-             <thead>
-                 <tr>
-                      <th>#</th>
-                      <th class="sortable" data-sort="name">نام کالا</th>
-                      <th class="sortable" data-sort="code">کد</th>
-                      <th class="sortable" data-sort="quantity">تعداد</th>
-                      <th class="sortable" data-sort="price">قیمت واحد</th>
-                      <th class="sortable" data-sort="value">ارزش کل</th>
-                      <th class="sortable" data-sort="location">محل</th>
-                      <th class="sortable" data-sort="category">دسته</th>
-                      <th>توضیحات</th>
-                      <th>عملیات</th>
-                 </tr>
-             </thead>
-             <tbody id="inventory-table-body">
-                 <!-- پر می‌شود با جاوااسکریپت -->
-             </tbody>
-         </table>
-
-         <div id="empty-state" class="empty-state">
-             هنوز کالایی ثبت نشده است. از فرم بالا برای افزودن اولین ردیف استفاده کنید.
-         </div>
-      <div class="card" style="margin-top:20px;">
-    <div class="card-header">
-        <h2 style="margin:0; font-size:18px;">خروجی و ورودی انبار</h2>
-    </div>
-
-    <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <button id="export-csv" class="btn btn-outline">خروجی CSV</button>
-        <button id="export-json" class="btn btn-outline">خروجی JSON</button>
-
-        <input type="file" id="import-file" accept="application/json" style="display:none;">
-        <button id="import-json" class="btn btn-primary">Import JSON</button>
-        <button id="print-report" class="btn btn-outline">
-    چاپ گزارش
-</button>
-
-    </div>
-
-    <span class="hint" style="margin-top:10px; display:block;">
-        خروجی‌ها شامل تمام اطلاعات انبار هستند.  
-        ورودی JSON فقط فایل‌های ساخت همین سیستم را قبول می‌کند.
-    </span>
-       
-</div>
-    
-            
-           
-
-         <div id="total-value"
-              class="hint"
-              style="margin-top:8px; text-align:left; font-weight:600; color:#115293;">
-         </div>
-     </div>
- </div>
-</div>
-
-<script src="app.js"></script>
-</body>
+ <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>سیستم انبارداری تحت وب</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>
