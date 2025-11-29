@@ -4,21 +4,27 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import { v4 as uuidv4 } from "uuid";
 import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3000;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 app.use(cors());
 app.use(bodyParser.json());
 
-const DB_FILE = "database.json";
+
+const DB_FILE = path.join(__dirname, "database.json");
+const CLIENT_DIR = path.resolve(__dirname, "..");
 
 // خواندن دیتابیس
 function loadDB() {
   if (!fs.existsSync(DB_FILE)) {
     fs.writeFileSync(DB_FILE, "[]");
   }
-  return JSON.parse(fs.readFileSync(DB_FILE));
+  return JSON.parse(fs.readFileSync(DB_FILE, "utf-8"));
 }
 
 // ذخیره دیتابیس
@@ -57,6 +63,10 @@ app.put("/items/:id", (req, res) => {
   items[index] = { ...items[index], ...req.body };
   saveDB(items);
   res.json(items[index]);
+});
+app.use(express.static(CLIENT_DIR));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(CLIENT_DIR, "index.html"));
 });
 
 app.listen(PORT, () => {
