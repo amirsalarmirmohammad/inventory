@@ -18,6 +18,12 @@ app.use(bodyParser.json());
 
 const DB_FILE = path.join(__dirname, "database.json");
 const CLIENT_DIR = path.resolve(__dirname, "..");
+const DIST_DIR = path.join(ROOT_DIR, "dist");
+const CLIENT_DIR = process.env.CLIENT_DIR
+  ? path.resolve(process.env.CLIENT_DIR)
+  : fs.existsSync(DIST_DIR)
+    ? DIST_DIR
+    : ROOT_DIR;
 
 // خواندن دیتابیس
 function loadDB() {
